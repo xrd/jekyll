@@ -37,6 +37,7 @@ require 'jekyll/draft'
 require 'jekyll/filters'
 require 'jekyll/static_file'
 require 'jekyll/errors'
+require 'jekyll/commando/commando'
 
 # extensions
 require 'jekyll/plugin'
