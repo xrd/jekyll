@@ -40,7 +40,7 @@ module Jekyll
       end
 
       def convert(content)
-        ::Tilt.new do |t|
+        ::Tilt.new(current_filename) do |t|
           content
         end.render
       rescue LoadError => e
