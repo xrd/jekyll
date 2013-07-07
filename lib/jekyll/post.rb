@@ -127,7 +127,11 @@ module Jekyll
     #
     # Returns the path to the file relative to the site source
     def path
-      self.data['path'] || File.join(@dir, '_posts', @name).sub(/\A\//, '')
+      if self.data && self.data['path']
+        self.data['path']
+      else
+        File.join(@dir.to_s, '_posts', @name.to_s).sub(/\A\//, '')
+      end
     end
 
     # Compares Post objects. First compares the Post date. If the dates are
