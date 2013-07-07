@@ -40,7 +40,9 @@ module Jekyll
       end
 
       def convert(content)
-        ::Tilt.new(current_filename || @ext).render(content)
+        ::Tilt.new do |t|
+          content
+        end.render
       rescue LoadError => e
         raise FatalException.new("Missing dependency: #{e.message.to_s.split(' -- ').last}")
       end
