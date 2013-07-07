@@ -3,31 +3,46 @@ module Jekyll
     class Tilt < Converter
       safe true
 
-      TILT_EXT_REXEP = %w[
-        ad adoc asciidoc
-        str
-        haml
-        sass scss
-        less
-        builder
-        rdoc
-        radius
-        mab
-        coffee
-        wiki creole mediawiki mw
-        yajl
-        rcsv
-        slim
-        org
-      ].map{ |e| "\.#{e}" }.join("|")
+      TILT_TO_HTML = %w[ad adoc asciidoc haml rdoc wiki creole mediawiki mw slim mab radius]
+      TILT_TO_CSS  = %w[sass scss less]
+      TILT_TO_JS   = %w[coffee]
+      TILT_TO_XML  = %w[builder]
+      TILT_TO_JSON = %w[yajl]
+      TILT_TO_CSV  = %w[rcsv]
+
+      TILT_EXTNAMES = TILT_TO_HTML | TILT_TO_CSS | TILT_TO_JS | TILT_TO_XML | TILT_TO_JSON | TILT_TO_CSV
+
+      TILT_EXT_REXEP = Regexp.new(
+        "(#{TILT_EXTNAMES.map{ |e| ".#{e}"}.join('|').gsub(/\./, '\.')})",
+        Regexp::IGNORECASE
+      )
 
       def matches(ext)
-        @ext = ext
-        ext =~ Regexp.new("(#{TILT_EXT_REXEP})", Regexp::IGNORECASE)
+        @ext ||= ext
+        !ext.match(TILT_EXT_REXEP).nil?
+      end
+
+      def output_ext(ext)
+        subject = ext.strip.downcase.gsub(/^\./, '')
+        if TILT_TO_HTML.include?(subject)
+          ".html"
+        elsif TILT_TO_CSS.include?(subject)
+          ".css"
+        elsif TILT_TO_JS.include?(subject)
+          ".js"
+        elsif TILT_TO_XML.include?(subject)
+          ".xml"
+        elsif TILT_TO_JSON.include?(subject)
+          ".json"
+        elsif TILT_TO_CSV.include?(subject)
+          ".csv"
+        end
       end
 
       def convert(content)
-        Tilt.new(@ext).render(content)
+        ::Tilt.new(current_filename || @ext).render(content)
+      rescue LoadError => e
+        raise FatalException.new("Missing dependency: #{e.message.to_s.split(' -- ').last}")
       end
     end
   end
