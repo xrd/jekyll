@@ -51,7 +51,7 @@ module Jekyll
     rescue => e
       Jekyll.logger.error "Conversion error:", "There was an error converting" +
         " '#{self.path}'."
-      raise e
+      raise FatalException.new(e)
     end
 
     # Determine the extension depending on content_type.
