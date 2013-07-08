@@ -125,13 +125,17 @@ module Jekyll
     #         the directory it's in, "_posts", and the name of the
     #         post file
     #
-    # Returns the path to the file relative to the site source
+    # Returns the path to the file relative to the site source or the path specified in
+    # the YAML Front-Matter.
     def path
-      if self.data && self.data['path']
-        self.data['path']
-      else
-        File.join(@dir.to_s, '_posts', @name.to_s).sub(/\A\//, '')
-      end
+      self.data.fetch('path', default_path)
+    end
+
+    # Public: fetches the path to this post relative to the site source
+    #
+    # Returns the path to this post relative to the site source
+    def default_path
+      File.join(@dir.to_s, '_posts', @name.to_s).sub(/\A\//, '')
     end
 
     # Compares Post objects. First compares the Post date. If the dates are
