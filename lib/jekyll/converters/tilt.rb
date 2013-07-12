@@ -3,7 +3,7 @@ module Jekyll
     class Tilt < Converter
       safe true
 
-      TILT_TO_HTML = %w[ad adoc asciidoc haml rdoc wiki creole mediawiki mw slim mab radius]
+      TILT_TO_HTML = %w[ad adoc asciidoc rdoc wiki creole mediawiki mw slim mab radius]
       TILT_TO_CSS  = %w[sass scss less]
       TILT_TO_JS   = %w[coffee]
       TILT_TO_XML  = %w[builder]
